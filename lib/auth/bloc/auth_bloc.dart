@@ -6,7 +6,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
+  AuthBloc() : super(const AuthState()) {
     on<Login>(_onLogin);
     on<ToggleShowPassword>(_onToggleShowPassword);
   }

@@ -35,5 +35,3 @@ class AuthState extends Equatable {
         showPassword,
       ];
 }
-
-class AuthInitial extends AuthState {}
