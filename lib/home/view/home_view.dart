@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -93,13 +95,34 @@ class HomeViewBody extends StatelessWidget {
                             color: Colors.green,
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Colors.red,
+                        if (state.deletingIndex != index)
+                          IconButton(
+                            onPressed: () {
+                              if (!state.isDeleting) {
+                                context.read<HomeBloc>().add(
+                                      DeleteUser(
+                                        users[index],
+                                        index,
+                                      ),
+                                    );
+                              }
+                            },
+                            icon: Icon(
+                              Icons.delete,
+                              color:
+                                  state.isDeleting ? Colors.grey : Colors.red,
+                            ),
                           ),
-                        ),
+                        if (state.isDeleting && state.deletingIndex == index)
+                          Container(
+                            height: 16,
+                            width: 16,
+                            margin: const EdgeInsets.only(right: 20, left: 14),
+                            child: const CircularProgressIndicator(
+                              color: Colors.red,
+                              strokeWidth: 2,
+                            ),
+                          )
                       ],
                     ),
                   ),

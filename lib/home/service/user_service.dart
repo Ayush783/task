@@ -15,6 +15,12 @@ class UserService {
               .toList(),
         );
       });
+
+  Future mockManageUser() async {
+    await Future.delayed(
+      const Duration(seconds: 3),
+    );
+  }
 }
 
 const mockUserList = [
