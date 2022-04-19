@@ -11,6 +11,12 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(const HomeState()) {
     on<LoadUsers>(_onLoadUsers);
+
+    on<AddUser>(_onAddUser);
+
+    on<EditUser>(_onEditUser);
+
+    on<DeleteUser>(_onDeleteUser);
   }
 
   final UserService userService = UserService();
@@ -26,5 +32,44 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else {
       emit(state.copyWith(users: userResponse.users));
     }
+  }
+
+  void _onAddUser(AddUser event, Emitter emit) async {
+    emit(state.copyWith(isAdding: true));
+    await userService.mockManageUser();
+    emit(
+      state.copyWith(
+        users: [
+          ...state.users + [event.user],
+        ],
+      ),
+    );
+  }
+
+  void _onEditUser(EditUser event, Emitter emit) async {
+    emit(state.copyWith(isAdding: true));
+    await userService.mockManageUser();
+    state.users[state.users.indexOf(event.prevUser)] = event.newUser;
+    emit(
+      state.copyWith(
+        users: state.users,
+      ),
+    );
+  }
+
+  void _onDeleteUser(DeleteUser event, Emitter emit) async {
+    emit(
+      state.copyWith(
+        isDeleting: true,
+        deletingIndex: event.index,
+      ),
+    );
+    await userService.mockManageUser();
+    state.users.remove(event.user);
+    emit(
+      state.copyWith(
+        users: state.users,
+      ),
+    );
   }
 }
