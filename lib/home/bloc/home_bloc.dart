@@ -37,22 +37,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   void _onAddUser(AddUser event, Emitter emit) async {
     emit(state.copyWith(isAdding: true));
     await userService.mockManageUser();
+    // state.users.add(event.user);
+    log(state.users.toString());
     emit(
       state.copyWith(
-        users: [
-          ...state.users + [event.user],
-        ],
+        users: state.addUser(event.user),
+        isAdded: true,
       ),
     );
+    log(state.users.toString());
   }
 
   void _onEditUser(EditUser event, Emitter emit) async {
     emit(state.copyWith(isAdding: true));
     await userService.mockManageUser();
-    state.users[state.users.indexOf(event.prevUser)] = event.newUser;
     emit(
       state.copyWith(
-        users: state.users,
+        users: state.editUser(event.prevUser, event.newUser),
+        isAdded: true,
       ),
     );
   }
@@ -69,6 +71,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(
       state.copyWith(
         users: state.users,
+        isDeleted: true,
       ),
     );
   }

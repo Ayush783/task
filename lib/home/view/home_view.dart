@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:task/manage_users/manage_users.dart';
 
 import '../bloc/home_bloc.dart';
 
@@ -20,12 +21,15 @@ class HomeView extends StatelessWidget {
           ),
           backgroundColor: const Color(0xffFF5470),
         ),
-        body: BlocProvider(
-          create: (context) => HomeBloc()..add(LoadUsers()),
-          child: const HomeViewListener(),
-        ),
+        body: const HomeViewListener(),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ManageView(),
+                ));
+          },
           backgroundColor: const Color(0xffFF5470),
           child: const Icon(
             Icons.add,
@@ -38,13 +42,53 @@ class HomeView extends StatelessWidget {
   }
 }
 
-class HomeViewListener extends StatelessWidget {
+class HomeViewListener extends StatefulWidget {
   const HomeViewListener({Key? key}) : super(key: key);
+
+  @override
+  State<HomeViewListener> createState() => _HomeViewListenerState();
+}
+
+class _HomeViewListenerState extends State<HomeViewListener> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<HomeBloc>().add(LoadUsers());
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state.isAdded) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'User added successfuly!',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else if (state.isDeleted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'User deleted!',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      },
       child: const HomeViewBody(),
     );
   }
@@ -89,7 +133,16 @@ class HomeViewBody extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ManageView(
+                                  user: users[index],
+                                ),
+                              ),
+                            );
+                          },
                           icon: const Icon(
                             Icons.edit,
                             color: Colors.green,
