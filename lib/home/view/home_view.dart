@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:task/manage_users/manage_users.dart';
+import 'package:task/profile/profile.dart';
 
 import '../bloc/home_bloc.dart';
 
@@ -125,6 +126,16 @@ class HomeViewBody extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileView(
+                            user: users[index],
+                          ),
+                        ),
+                      );
+                    },
                     title: Text(
                       users[index].username!,
                       style: GoogleFonts.poppins(fontSize: 16),
